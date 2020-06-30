@@ -43,18 +43,16 @@ class _HomePageState extends State<HomePage>
           .requestPermissions([PermissionGroup.location]);
       switch (result[PermissionGroup.location]) {
         case PermissionStatus.granted:
-         await GeofencingManager.initialize().then((_) {
-            officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
-              print(office.latitude);
-              GeoFenceClass.startListening(
-                  office.latitude, office.longitude, office.radius);
+          officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
+//            GeoFenceClass.startListening(
+//                office.latitude, office.longitude, office.radius);
 
-              setState(() {
-                geoFenceActive = true;
-                allottedOffice = office;
-              });
+            setState(() {
+              geoFenceActive = true;
+              allottedOffice = office;
             });
           });
+
           break;
         case PermissionStatus.denied:
           print("DENIED");
@@ -133,14 +131,13 @@ class _HomePageState extends State<HomePage>
 
     firebaseMessaging.configure(onLaunch: (Map<String, dynamic> msg) {
       print(" onLaunch called ${(msg)}");
-      return null ;
+      return null;
     }, onResume: (Map<String, dynamic> msg) {
       print(" onResume called ${(msg)}");
-      return null ;
-
+      return null;
     }, onMessage: (Map<String, dynamic> msg) {
       showDialogNotification(context, msg["notification"]["body"]);
-      return null ;
+      return null;
     });
     firebaseMessaging.requestNotificationPermissions(
         const IosNotificationSettings(sound: true, alert: true, badge: true));

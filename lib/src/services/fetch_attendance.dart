@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:geo_attendance_system/src/models/AttendaceList.dart';
 import 'package:geo_attendance_system/src/models/office.dart';
+import 'package:geo_attendance_system/src/services/database.dart';
 
 String getDoubleDigit(String value) {
   if (value.length >= 2) return value;
@@ -29,7 +30,7 @@ String getFormattedTime(DateTime day) {
 }
 
 class AttendanceDatabase {
-  static final _databaseReference = FirebaseDatabase.instance.reference();
+  static final _databaseReference = DataBase().databaseRef;
   static final AttendanceDatabase _instance = AttendanceDatabase._internal();
 
   factory AttendanceDatabase() {

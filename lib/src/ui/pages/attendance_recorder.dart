@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:great_circle_distance/great_circle_distance.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +166,9 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
   }
 
   void _callMarkInFunction() {
+    compare();
     if (GeoFenceClass.geofenceState == 'Unknown') {
+//    if (false) {
       showDialog(
           context: context,
           child: Dialog(
@@ -219,6 +222,26 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
 //    controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
 //        target: LatLng(lat, long), zoom: 15, tilt: 50.0, bearing: 45.0)));
 //  }
+
+  void compare(){
+    var distance;
+    officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
+       distance = new GreatCircleDistance.fromDegrees(latitude1:_startLocation.latitude,
+          longitude1: _startLocation.longitude,
+          latitude2: office.latitude,
+          longitude2: office.longitude);
+       var totaldistance = distance.haversineDistance().toStringAsFixed(2);
+       double distanceDouble1 = double.parse(totaldistance);
+       setState(() {
+         if(distanceDouble1 <= 300.0)
+           GeoFenceClass.geofenceState = "GeofenceEvent.enter" ;
+         else
+           GeoFenceClass.geofenceState = "UnKnown" ;
+
+       });
+    });
+
+  }
 
   initPlatformState() async {
     await _locationService.changeSettings(

@@ -33,10 +33,9 @@ class OfficeDatabase {
         longitude = s["longitude"];
         if (s["radius"] == null) {
           radius = 200.0;
-        } else{
+        } else {
           var temp = s["radius"];
           radius = double.tryParse(temp.toString());
-
         }
       }
     });
@@ -48,6 +47,40 @@ class OfficeDatabase {
         longitude: longitude,
         radius: radius);
   }
+
+//    getOffice(String uid) async {
+//    DataSnapshot dataSnapshot;
+//    DataSnapshot userInfo = await DataBase().getUser(uid);
+//    var office = userInfo.value["allotted_office"];
+//
+//    dataSnapshot = await DataBase().getAllLocations();
+//    var findOffice = dataSnapshot.value;
+//
+//    String name;
+//    double latitude, longitude, radius;
+//    Map<dynamic, dynamic> values = findOffice;
+//
+//    values.forEach((k, s) {
+//      if (s["name"] == office["name"]) {
+//        name = s["name"];
+//        latitude = s["latitude"];
+//        longitude = s["longitude"];
+//        if (s["radius"] == null) {
+//          radius = 200.0;
+//        } else {
+//          var temp = s["radius"];
+//          radius = double.tryParse(temp.toString());
+//        }
+//      }
+//    });
+
+//    return Office(
+//        key: office["name"],
+//        name: name,
+//        latitude: latitude,
+//        longitude: longitude,
+//        radius: radius);
+//  }
 
   Future<List<Office>> getOfficeList() async {
     DataSnapshot dataSnapshot = await _databaseReference.once();
