@@ -165,8 +165,8 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
     );
   }
 
-  void _callMarkInFunction() {
-    compare();
+  void _callMarkInFunction() async {
+    await compare();
     if (GeoFenceClass.geofenceState == 'Unknown') {
 //    if (false) {
       showDialog(
@@ -192,7 +192,8 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
     }
   }
 
-  void _callMarkOutFunction() {
+  void _callMarkOutFunction() async {
+    await compare();
     if (GeoFenceClass.geofenceState == 'Unknown') {
       showDialog(
           context: context,
@@ -223,24 +224,23 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
 //        target: LatLng(lat, long), zoom: 15, tilt: 50.0, bearing: 45.0)));
 //  }
 
-  void compare(){
+  void compare() {
     var distance;
     officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
-       distance = new GreatCircleDistance.fromDegrees(latitude1:_startLocation.latitude,
+      distance = new GreatCircleDistance.fromDegrees(
+          latitude1: _startLocation.latitude,
           longitude1: _startLocation.longitude,
           latitude2: office.latitude,
           longitude2: office.longitude);
-       var totaldistance = distance.haversineDistance().toStringAsFixed(2);
-       double distanceDouble1 = double.parse(totaldistance);
-       setState(() {
-         if(distanceDouble1 <= 300.0)
-           GeoFenceClass.geofenceState = "GeofenceEvent.enter" ;
-         else
-           GeoFenceClass.geofenceState = "UnKnown" ;
-
-       });
+      var totaldistance = distance.haversineDistance().toStringAsFixed(2);
+      double distanceDouble1 = double.parse(totaldistance);
+      setState(() {
+        if (distanceDouble1 <= 200.0)
+          GeoFenceClass.geofenceState = "GeofenceEvent.enter";
+        else
+          GeoFenceClass.geofenceState = "UnKnown";
+      });
     });
-
   }
 
   initPlatformState() async {
@@ -279,6 +279,7 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
                     markerId: MarkerId("Current Location"),
                     position: LatLng(result.latitude, result.longitude)));
               });
+              await compare();
             }
           });
         }

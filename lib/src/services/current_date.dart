@@ -1,10 +1,10 @@
 DateTime getTodayDate() {
   DateTime dateToday = DateTime(
-      DateTime.now().year,
-      DateTime.now().month,
-      DateTime.now().day,
-      DateTime.now().hour,
-      DateTime.now().minute,
-      DateTime.now().second);
+      DateTime.now().toUtc().year,
+      DateTime.now().toUtc().month,
+      DateTime.now().toUtc().day,
+      DateTime.now().toUtc().hour + 2 ,
+      DateTime.now().toUtc().minute,
+      DateTime.now().toUtc().second);
   return dateToday;
 }
