@@ -1,0 +1,4 @@
+analyzer:
+  enable-experiment:
+    - spread-collections
+    - control-flow-collections

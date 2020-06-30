@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "478303728687",
+    "firebase_url": "https://jack-b5256.firebaseio.com",
+    "project_id": "jack-b5256",
+    "storage_bucket": "jack-b5256.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:478303728687:android:1f5b0658e449f7436a02da",
+        "android_client_info": {
+          "package_name": "zacks.com.geo_attendance_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "478303728687-q6shr1ocdfm6rf50bocbefla6di9tkma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAixiiGliHQme1AEBfJ5JoWFPvcLfI3WOU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "478303728687-q6shr1ocdfm6rf50bocbefla6di9tkma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
