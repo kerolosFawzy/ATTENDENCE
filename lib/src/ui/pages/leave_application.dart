@@ -22,6 +22,7 @@ class LeaveApplicationWidget extends StatefulWidget {
 class LeaveApplicationWidgetState extends State<LeaveApplicationWidget>
     with SingleTickerProviderStateMixin {
   FirebaseDatabase db = FirebaseDatabase();
+
   //FirebaseUser _user;
   DatabaseReference _userRef, _managerRef, _leaveRef;
   String _managerName, _managerDesignation;
@@ -35,6 +36,7 @@ class LeaveApplicationWidgetState extends State<LeaveApplicationWidget>
   var date = DateTime.now();
 
   bool ishalfday = false;
+
   // ignore: non_constant_identifier_names
   String leave_type;
   int nofdays;
@@ -59,9 +61,9 @@ class LeaveApplicationWidgetState extends State<LeaveApplicationWidget>
   ];
 
   int leaveIndex = -1;
-  List<Widget> list ;
+  List<Widget> list;
 
- // String _errorMessage;
+  // String _errorMessage;
 
   @override
   void initState() {
@@ -124,7 +126,7 @@ class LeaveApplicationWidgetState extends State<LeaveApplicationWidget>
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           textTheme: TextTheme(
-              body1:  TextStyle(
+              body1: TextStyle(
                   color: Colors.black87,
                   fontFamily: "poppins-medium",
                   fontSize: 15,
@@ -244,18 +246,17 @@ class LeaveApplicationWidgetState extends State<LeaveApplicationWidget>
                                                   setState(() {
                                                     int _difference = _toDateInt
                                                         .difference(
-                                                        _fromDateInt)
+                                                            _fromDateInt)
                                                         .inDays;
                                                     _difference += 1;
                                                     if (_difference <= 0)
                                                       leavesCount =
-                                                      "Invalid Dates";
+                                                          "Invalid Dates";
                                                     else
                                                       leavesCount = _difference
                                                           .toString();
                                                   });
                                                 }
-
                                               });
                                             },
                                                 currentTime: DateTime.now(),

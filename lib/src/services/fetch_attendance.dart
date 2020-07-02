@@ -79,7 +79,7 @@ class AttendanceDatabase {
     String time = getFormattedTime(dateTime);
     String date = getFormattedDate(dateTime);
     var json = {
-      "office": office.getKey,
+      "office": office.name,
       "time": time,
     };
     String markChild = markType + "-" + time;

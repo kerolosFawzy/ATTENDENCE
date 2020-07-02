@@ -67,7 +67,6 @@ class _LoginState extends State<Login> {
 
   Future<List> checkForSingleSignOn(FirebaseUser _user) async {
     DataSnapshot dataSnapshot = await DataBase().getUser(_user.uid);
-   // user = Employee.fromSnapshot(dataSnapshot);
     if (dataSnapshot != null) {
       var uuid = dataSnapshot.value["UUID"];
       List listOfDetails = await getDeviceDetails();

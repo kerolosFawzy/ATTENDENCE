@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:geo_attendance_system/src/models/office.dart';
 import 'package:great_circle_distance/great_circle_distance.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,6 +31,7 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
   double zoomVal = 5.0;
   OfficeDatabase officeDatabase = new OfficeDatabase();
 
+  static Office userOffice;
   StreamSubscription<LocationData> _locationSubscription;
   LocationData _currentLocation;
   LocationData _startLocation;
@@ -108,41 +110,75 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
         markers: _markers,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
-          officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
-            setState(() {
-              rMax = office.radius;
-              rMin = 3 * office.radius / 5;
-              _radius = office.radius;
-              Timer.periodic(new Duration(milliseconds: 100), (timer) {
-                var radius =
-                    _circles.isEmpty ? office.radius : _circles.first.radius;
+          officeDatabase.getOfficeList().then((List<Office> offices) {
+            _circles.clear();
+            offices.forEach((office) {
+              setState(() {
+                rMax = office.radius;
+                rMin = 3 * office.radius / 5;
+                _radius = office.radius;
+                Timer.periodic(new Duration(milliseconds: 200), (timer) {
+                  var radius =
+                      _circles.isEmpty ? office.radius : _circles.first.radius;
 
-                if ((radius > rMax) || (radius < rMin)) {
-                  direction *= -1;
-                }
-                var _par = (radius / _radius) - 0.2;
-                var radiusFinal = radius + direction * 10;
-                if (!mounted) {
-                  timer.cancel();
-                  return;
-                }
-                setState(() {
-                  _circles.clear();
-                  _circles.add(Circle(
-                    circleId: CircleId("GeoFenceCircle"),
-                    center: LatLng(office.latitude, office.longitude),
-                    radius: radiusFinal,
-                    strokeColor: Colors.blueGrey,
-                    strokeWidth: 5,
-                    fillColor: Colors.blueGrey.withOpacity(0.6 * _par),
-                  ));
+                  if ((radius > rMax) || (radius < rMin)) {
+                    direction *= -1;
+                  }
+                  var _par = (radius / _radius) - 0.2;
+                  var radiusFinal = radius + direction * 10;
+                  if (!mounted) {
+                    timer.cancel();
+                    return;
+                  }
+                  setState(() {
+                    //    _circles.clear();
+
+                    _circles.add(Circle(
+                      circleId: CircleId("GeoFenceCircle ${office.name}"),
+                      center: LatLng(office.latitude, office.longitude),
+                      radius: radiusFinal,
+                      strokeColor: Colors.blueGrey,
+                      strokeWidth: 5,
+                      fillColor: Colors.blueGrey.withOpacity(0.6 * _par),
+                    ));
+                  });
                 });
-//            circleOption.fillOpacity = 0.6 * _par;
-
-//                circle.setOptions(circleOption);
               });
             });
           });
+
+//          officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
+//            setState(() {
+//              rMax = office.radius;
+//              rMin = 3 * office.radius / 5;
+//              _radius = office.radius;
+//              Timer.periodic(new Duration(milliseconds: 100), (timer) {
+//                var radius =
+//                    _circles.isEmpty ? office.radius : _circles.first.radius;
+//
+//                if ((radius > rMax) || (radius < rMin)) {
+//                  direction *= -1;
+//                }
+//                var _par = (radius / _radius) - 0.2;
+//                var radiusFinal = radius + direction * 10;
+//                if (!mounted) {
+//                  timer.cancel();
+//                  return;
+//                }
+//                setState(() {
+//                  _circles.clear();
+//                  _circles.add(Circle(
+//                    circleId: CircleId("GeoFenceCircle"),
+//                    center: LatLng(office.latitude, office.longitude),
+//                    radius: radiusFinal,
+//                    strokeColor: Colors.blueGrey,
+//                    strokeWidth: 5,
+//                    fillColor: Colors.blueGrey.withOpacity(0.6 * _par),
+//                  ));
+//                });
+//              });
+//            });
+//          });
         },
       ),
     );
@@ -168,7 +204,6 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
   void _callMarkInFunction() async {
     await compare();
     if (GeoFenceClass.geofenceState == 'Unknown') {
-//    if (false) {
       showDialog(
           context: context,
           child: Dialog(
@@ -186,9 +221,9 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
           ));
     } else {
       onLoadingDialog(context);
-      officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
-        markInAttendance(context, office, _currentLocation, widget.user);
-      });
+      //    officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {      });
+
+      markInAttendance(context, userOffice, _currentLocation, widget.user);
     }
   }
 
@@ -212,9 +247,9 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
           ));
     } else {
       onLoadingDialog(context);
-      officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
-        markOutAttendance(context, office, _currentLocation, widget.user);
-      });
+      // officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {});
+
+      markOutAttendance(context, userOffice, _currentLocation, widget.user);
     }
   }
 
@@ -226,21 +261,82 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
 
   void compare() {
     var distance;
-    officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
-      distance = new GreatCircleDistance.fromDegrees(
-          latitude1: _startLocation.latitude,
-          longitude1: _startLocation.longitude,
-          latitude2: office.latitude,
-          longitude2: office.longitude);
-      var totaldistance = distance.haversineDistance().toStringAsFixed(2);
-      double distanceDouble1 = double.parse(totaldistance);
-      setState(() {
-        if (distanceDouble1 <= 200.0)
-          GeoFenceClass.geofenceState = "GeofenceEvent.enter";
-        else
-          GeoFenceClass.geofenceState = "UnKnown";
-      });
+    bool flag = true;
+    officeDatabase.getOfficeList().then((List<Office> mList) async {
+
+      for (Office office in mList) {
+        distance = await new GreatCircleDistance.fromDegrees(
+            latitude1: _startLocation.latitude,
+            longitude1: _startLocation.longitude,
+            latitude2: office.latitude,
+            longitude2: office.longitude);
+        var totaldistance =
+            await distance.haversineDistance().toStringAsFixed(2);
+        double distanceDouble1 = double.parse(totaldistance);
+        if (flag)
+          setState(() {
+            if (distanceDouble1 <= 200.0) {
+              if (GeoFenceClass.geofenceState == "UnKnown")
+                GeoFenceClass.geofenceState = "GeofenceEvent.enter";
+              else {
+                if (GeoFenceClass.geofenceState == "GeofenceEvent.enter") {
+                  GeoFenceClass.geofenceState = "GeofenceEvent.dwell";
+                } else {
+                  GeoFenceClass.geofenceState = "GeofenceEvent.enter";
+                }
+              }
+              flag = false ;
+              userOffice = office;
+              return;
+            } else
+              GeoFenceClass.geofenceState = "UnKnown";
+          });
+      }
+//      await mList.forEach((office) async{
+//        distance = await new GreatCircleDistance.fromDegrees(
+//            latitude1: _startLocation.latitude,
+//            longitude1: _startLocation.longitude,
+//            latitude2: office.latitude,
+//            longitude2: office.longitude);
+//        var totaldistance = await distance.haversineDistance().toStringAsFixed(2);
+//        double distanceDouble1 = double.parse(totaldistance);
+//        setState(() {
+//
+//          if (distanceDouble1 <= 200.0) {
+//            if (GeoFenceClass.geofenceState == "UnKnown")
+//              GeoFenceClass.geofenceState = "GeofenceEvent.enter";
+//            else {
+//              if (GeoFenceClass.geofenceState == "GeofenceEvent.enter") {
+//                GeoFenceClass.geofenceState = "GeofenceEvent.dwell";
+//              } else {
+//                GeoFenceClass.geofenceState = "GeofenceEvent.enter";
+//              }
+//            }
+//            userOffice = office;
+//            return;
+//          } else
+//            GeoFenceClass.geofenceState = "UnKnown";
+//        });
+//      });
     });
+//    officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
+//      distance = new GreatCircleDistance.fromDegrees(
+//          latitude1: _startLocation.latitude,
+//          longitude1: _startLocation.longitude,
+//          latitude2: office.latitude,
+//          longitude2: office.longitude);
+//      var totaldistance = distance.haversineDistance().toStringAsFixed(2);
+//      double distanceDouble1 = double.parse(totaldistance);
+//      setState(() {
+//        if (distanceDouble1 <= 200.0)
+//          GeoFenceClass.geofenceState = "GeofenceEvent.enter";
+//        else
+//          GeoFenceClass.geofenceState = "UnKnown";
+//      });
+//    });
+  setState(() {
+    flag = true ;
+  });
   }
 
   initPlatformState() async {
@@ -279,7 +375,6 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
                     markerId: MarkerId("Current Location"),
                     position: LatLng(result.latitude, result.longitude)));
               });
-              await compare();
             }
           });
         }

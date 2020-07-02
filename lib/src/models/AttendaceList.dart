@@ -4,7 +4,6 @@ import 'package:geo_attendance_system/src/ui/constants/attendance_type.dart';
 class AttendanceList {
   DateTime dateTime;
   List<Attendance> attendanceList;
-  // final _databaseReference = FirebaseDatabase.instance.reference();
 
   AttendanceList({this.dateTime, this.attendanceList});
 
@@ -30,9 +29,8 @@ class AttendanceList {
         String formattedString = selectedDate.split("-").reversed.join("-");
         formattedString = formattedString + " ${value["time"]}";
         DateTime time = DateTime.parse(formattedString);
-
-        attendanceList.add(
-            Attendance(type: type, time: time, office: map[value["office"]]));
+        attendanceList
+            .add(Attendance(type: type, time: time, office: value["office"]));
       });
     }
     this.attendanceList = attendanceList;
