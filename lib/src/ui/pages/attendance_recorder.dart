@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:ui';
 import 'package:geo_attendance_system/src/models/office.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:great_circle_distance/great_circle_distance.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -95,6 +97,7 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
   }
 
   Widget googleMap(BuildContext context) {
+    trackLocation();
     double _initialLat = 30.677515;
     double _initialLong = 76.743902;
     double _initialZoom = 15;
@@ -223,7 +226,7 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
       onLoadingDialog(context);
       //    officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {      });
 
-      markInAttendance(context, userOffice, _currentLocation, widget.user);
+      markInAttendance(context, AttendanceRecorderWidgetState.userOffice , _currentLocation, widget.user);
     }
   }
 
@@ -249,7 +252,7 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
       onLoadingDialog(context);
       // officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {});
 
-      markOutAttendance(context, userOffice, _currentLocation, widget.user);
+      markOutAttendance(context, AttendanceRecorderWidgetState.userOffice, _currentLocation, widget.user);
     }
   }
 
@@ -259,15 +262,32 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
 //        target: LatLng(lat, long), zoom: 15, tilt: 50.0, bearing: 45.0)));
 //  }
 
-  void compare() {
+  void trackLocation() {
+    var geolocator = Geolocator();
+    var locationOptions = LocationOptions(distanceFilter: 10);
+
+    StreamSubscription<Position> positionStream = geolocator
+        .getPositionStream(locationOptions)
+        .listen((Position position) {
+      setState(() {
+        Map<String, double> map = new Map() ;
+        map['latitude'] = position.toJson() ['latitude']  ;
+        map['longitude'] = position.toJson()['longitude'];
+
+        _currentLocation = LocationData.fromMap(map);
+      });
+      //print(position == null ? 'Unknown' : position.latitude.toString() + ', ' + position.longitude.toString());
+    });
+  }
+
+  void compare() async{
     var distance;
     bool flag = true;
-    officeDatabase.getOfficeList().then((List<Office> mList) async {
-
+   await officeDatabase.getOfficeList().then((List<Office> mList) async {
       for (Office office in mList) {
         distance = await new GreatCircleDistance.fromDegrees(
-            latitude1: _startLocation.latitude,
-            longitude1: _startLocation.longitude,
+            latitude1: _currentLocation.latitude,
+            longitude1: _currentLocation.longitude,
             latitude2: office.latitude,
             longitude2: office.longitude);
         var totaldistance =
@@ -285,63 +305,21 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
                   GeoFenceClass.geofenceState = "GeofenceEvent.enter";
                 }
               }
-              flag = false ;
+              flag = false;
               userOffice = office;
-              return;
             } else
               GeoFenceClass.geofenceState = "UnKnown";
           });
       }
-//      await mList.forEach((office) async{
-//        distance = await new GreatCircleDistance.fromDegrees(
-//            latitude1: _startLocation.latitude,
-//            longitude1: _startLocation.longitude,
-//            latitude2: office.latitude,
-//            longitude2: office.longitude);
-//        var totaldistance = await distance.haversineDistance().toStringAsFixed(2);
-//        double distanceDouble1 = double.parse(totaldistance);
-//        setState(() {
-//
-//          if (distanceDouble1 <= 200.0) {
-//            if (GeoFenceClass.geofenceState == "UnKnown")
-//              GeoFenceClass.geofenceState = "GeofenceEvent.enter";
-//            else {
-//              if (GeoFenceClass.geofenceState == "GeofenceEvent.enter") {
-//                GeoFenceClass.geofenceState = "GeofenceEvent.dwell";
-//              } else {
-//                GeoFenceClass.geofenceState = "GeofenceEvent.enter";
-//              }
-//            }
-//            userOffice = office;
-//            return;
-//          } else
-//            GeoFenceClass.geofenceState = "UnKnown";
-//        });
-//      });
     });
-//    officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) {
-//      distance = new GreatCircleDistance.fromDegrees(
-//          latitude1: _startLocation.latitude,
-//          longitude1: _startLocation.longitude,
-//          latitude2: office.latitude,
-//          longitude2: office.longitude);
-//      var totaldistance = distance.haversineDistance().toStringAsFixed(2);
-//      double distanceDouble1 = double.parse(totaldistance);
-//      setState(() {
-//        if (distanceDouble1 <= 200.0)
-//          GeoFenceClass.geofenceState = "GeofenceEvent.enter";
-//        else
-//          GeoFenceClass.geofenceState = "UnKnown";
-//      });
-//    });
-  setState(() {
-    flag = true ;
-  });
+
+    setState(() {
+      flag = true;
+    });
   }
 
   initPlatformState() async {
-    await _locationService.changeSettings(
-        accuracy: LocationAccuracy.BALANCED, interval: 1000);
+    await _locationService.changeSettings(interval: 1000);
 
     LocationData location;
     // Platform messages may fail, so we use a try/catch PlatformException.
