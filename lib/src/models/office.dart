@@ -33,6 +33,7 @@ class Office {
         name: parsedJson['name'],
         latitude: parsedJson['latitude'],
         longitude: parsedJson['longitude'],
-        radius: parsedJson['radius']);
+        radius: double.tryParse(parsedJson['radius'].toString())
+    );
   }
 }

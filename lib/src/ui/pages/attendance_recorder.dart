@@ -145,6 +145,7 @@ class AttendanceRecorderWidgetState extends State<AttendanceRecorderWidget> {
                       fillColor: Colors.blueGrey.withOpacity(0.6 * _par),
                     ));
                   });
+
                 });
               });
             });

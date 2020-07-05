@@ -43,16 +43,15 @@ class _HomePageState extends State<HomePage>
           .requestPermissions([PermissionGroup.location]);
       switch (result[PermissionGroup.location]) {
         case PermissionStatus.granted:
-          officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) async {
+          // officeDatabase.getOfficeBasedOnUID(widget.user.uid).then((office) async {
 //            await GeofencingManager.initialize();
 //
 //            GeoFenceClass.startListening(
 //                office.latitude, office.longitude, office.radius);
+          //     });
 
-            setState(() {
-              geoFenceActive = true;
-              allottedOffice = office;
-            });
+          setState(() {
+            geoFenceActive = true;
           });
 
           break;

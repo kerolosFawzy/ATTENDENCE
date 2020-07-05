@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:geo_attendance_system/src/models/user.dart';
+import 'package:geo_attendance_system/src/ui/pages/employ_attendence.dart';
 
 import '../pages/attendance_recorder.dart';
 import '../pages/attendance_summary.dart';
@@ -45,6 +47,16 @@ void leaveStatusCallback(BuildContext context, FirebaseUser user) {
               )));
 }
 
+void employeesAttendanceCallback(BuildContext context, FirebaseUser user) {
+  Navigator.push(
+      context,
+      CupertinoPageRoute(
+          builder: (context) => EmployeeAttendance(
+                title: "Leave Status",
+                user: user,
+              )));
+}
+
 List<List> infoAboutTiles = [
   [
     "assets/icons/attendance_recorder.png",
@@ -59,15 +71,21 @@ List<List> infoAboutTiles = [
     attendanceSummaryCallback
   ],
   [
-    "assets/icons/leave_application.png",
-    "Leaves Application",
-    "Management",
-    leaveApplicationCallback
-  ],
-  [
     "assets/icons/leave_status.png",
-    "Leaves Status",
-    "Check pending status of leaves",
-    leaveStatusCallback
+    "Employees Attendance",
+    "Check All Employees Attendance",
+    employeesAttendanceCallback
   ],
+//  [
+//    "assets/icons/leave_application.png",
+//    "Leaves Application",
+//    "Management",
+//    leaveApplicationCallback
+//  ],
+//  [
+//    "assets/icons/leave_status.png",
+//    "Leaves Status",
+//    "Check pending status of leaves",
+//    leaveStatusCallback
+//  ],
 ];

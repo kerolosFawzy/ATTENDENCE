@@ -43,7 +43,7 @@ Widget buildTile(String icon, String title, String subtitle,
                   style: TextStyle(
                     color: Colors.black38,
                     fontWeight: FontWeight.w700,
-                    fontSize: 13.0,
+                    fontSize: 10.0,
                   ),
                   textAlign: TextAlign.center,
                 ),

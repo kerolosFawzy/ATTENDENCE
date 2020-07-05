@@ -39,6 +39,8 @@ class AttendanceDatabase {
 
   AttendanceDatabase._internal();
 
+
+
   static Future<DataSnapshot> getAttendanceBasedOnUID(String uid) async {
     DataSnapshot dataSnapshot =
         await _databaseReference.child("Attendance").child(uid).once();

@@ -3,6 +3,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:geo_attendance_system/src/services/authentication.dart';
+import 'package:geo_attendance_system/src/services/database.dart';
 import 'package:geo_attendance_system/src/ui/constants/colors.dart';
 import 'package:geo_attendance_system/src/ui/constants/dashboard_tile_info.dart';
 import 'package:geo_attendance_system/src/ui/pages/pending_approval_manager.dart';
@@ -23,7 +24,22 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  static const header_height = 100.0;
+  static const header_height = 80.0;
+  String userType;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUser();
+  }
+
+  void fetchUser() async {
+    await DataBase().getUser(widget.user.uid).then((value) {
+      setState(() {
+        userType = value.value["employeeType"];
+      });
+    });
+  }
 
   Animation<RelativeRect> getPanelAnimation(BoxConstraints constraints) {
     final height = constraints.biggest.height;
@@ -57,8 +73,7 @@ class _DashboardState extends State<Dashboard> {
                   new Expanded(
                     child: new Center(
                       child: DashboardMainPanel(
-                        user: widget.user,
-                      ),
+                          user: widget.user, userType: userType),
                     ),
                   )
                 ],
@@ -80,16 +95,27 @@ class _DashboardState extends State<Dashboard> {
 
 class DashboardMainPanel extends StatelessWidget {
   final FirebaseUser user;
+  String userType;
 
-  DashboardMainPanel({this.user});
+  DashboardMainPanel({this.user, this.userType});
 
   final List tileData = infoAboutTiles;
 
   List<Widget> _listWidget(BuildContext context) {
     List<Widget> widgets = new List();
-    tileData.forEach((tile) {
-      widgets.add(buildTile(tile[0], tile[1], tile[2], context, user, tile[3]));
-    });
+    if (userType == "worker") {
+      int i = 0;
+      tileData.forEach((tile) {
+        i++;
+        if (i == 3) return;
+        widgets
+            .add(buildTile(tile[0], tile[1], tile[2], context, user, tile[3]));
+      });
+    } else
+      tileData.forEach((tile) {
+        widgets
+            .add(buildTile(tile[0], tile[1], tile[2], context, user, tile[3]));
+      });
 
     return widgets;
   }
@@ -174,18 +200,19 @@ class _NavigationPanelState extends State<NavigationPanel> {
     );
   }
 
+  ///TODO check location here
   Future<String> fetchOfficeName() async {
     DataSnapshot dataSnapshot = await _databaseReference
         .child("users")
         .child(widget.user.uid)
-        .child("allotted_office")
+        .child("fullName")
         .once();
-    DataSnapshot snapshot = await _databaseReference
-        .child("location")
-        .child(dataSnapshot.value)
-        .child("name")
-        .once();
-    return snapshot.value;
+//    DataSnapshot snapshot = await _databaseReference
+//        .child("location")
+//        .child(dataSnapshot.value)
+//        .child("name")
+//        .once();
+    return dataSnapshot.value;
   }
 
   @override
@@ -218,11 +245,9 @@ class _NavigationPanelState extends State<NavigationPanel> {
                         textAlign: TextAlign.center,
                       );
                     return Stack(children: [
-                      drawerTile("Allocated Location: ${snapshot.data}", null,
-                          Icons.location_on),
+                      drawerTile(
+                          "Welcome: ${snapshot.data}", null, Icons.person),
                     ]);
-
-
                 }
               },
             ),
@@ -252,27 +277,26 @@ class _NavigationPanelState extends State<NavigationPanel> {
                         'Error:\n\n${snapshot.error}',
                         textAlign: TextAlign.center,
                       );
-                    print(snapshot.data.value);
-                    if (snapshot.data.value == null || snapshot.data.value == 1)
-                      return Stack(children: [
-                        drawerTile("Review Pending Leaves", () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  LeaveApprovalByManagerWidget(
-                                    title: "Review Leaves",
-                                    user: widget.user,
-                                  )));
-                        }, Icons.perm_identity),
-                        Positioned(
-                          child: Icon(
-                            Icons.notifications,
-                            color: Colors.yellow,
-                            size: 30,
-                          ),
-                          right: 17,
-                          height: 40,
-                        ),
-                      ]);
+//                    if (snapshot.data.value == null || snapshot.data.value == 1)
+//                      return Stack(children: [
+//                        drawerTile("Review Pending Leaves", () {
+//                          Navigator.of(context).push(MaterialPageRoute(
+//                              builder: (context) =>
+//                                  LeaveApprovalByManagerWidget(
+//                                    title: "Review Leaves",
+//                                    user: widget.user,
+//                                  )));
+//                        }, Icons.perm_identity),
+//                        Positioned(
+//                          child: Icon(
+//                            Icons.notifications,
+//                            color: Colors.yellow,
+//                            size: 30,
+//                          ),
+//                          right: 17,
+//                          height: 40,
+//                        ),
+//                      ]);
 
                     return Container();
                 }

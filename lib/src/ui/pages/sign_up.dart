@@ -87,7 +87,7 @@ class _SignUpState extends State<SignUp> {
         List listOfDetails = await getDeviceDetails();
         emp.UUID = listOfDetails[2];
 
-        DataBase().addUser(emp,_userUid);
+        DataBase().addUser(emp, _userUid);
         FirebaseUser mUser = await authObject.signIn(email, _password);
         Navigator.pushReplacement(
           context,
@@ -110,7 +110,8 @@ class _SignUpState extends State<SignUp> {
     }
   }
 
-  Widget horizontalLine() => Padding(
+  Widget horizontalLine() =>
+      Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
         child: Container(
           width: ScreenUtil.getInstance().setWidth(120),
@@ -123,7 +124,8 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-    ScreenUtil.instance = ScreenUtil.getInstance()..init(context);
+    ScreenUtil.instance = ScreenUtil.getInstance()
+      ..init(context);
     ScreenUtil.instance =
         ScreenUtil(width: 750, height: 1334, allowFontScaling: true);
     return new Scaffold(
@@ -167,7 +169,7 @@ class _SignUpState extends State<SignUp> {
                                       fontFamily: "Poppins-Bold",
                                       color: appbarcolor,
                                       fontSize:
-                                          ScreenUtil.getInstance().setSp(90),
+                                      ScreenUtil.getInstance().setSp(90),
                                       letterSpacing: .6,
                                       fontWeight: FontWeight.bold)),
                               Text("Attendance and HR Management System",
@@ -176,7 +178,7 @@ class _SignUpState extends State<SignUp> {
                                       fontFamily: "Poppins-Bold",
                                       color: Colors.black54,
                                       fontSize:
-                                          ScreenUtil.getInstance().setSp(25),
+                                      ScreenUtil.getInstance().setSp(25),
                                       letterSpacing: 0.2,
                                       fontWeight: FontWeight.bold)),
                             ],
@@ -317,158 +319,168 @@ class _SignUpState extends State<SignUp> {
         child: Form(
           key: _formKey,
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
               Text("sign Up",
-                  style: TextStyle(
-                      fontSize: ScreenUtil.getInstance().setSp(45),
-                      fontFamily: "Poppins-Bold",
-                      letterSpacing: .6)),
-              SizedBox(
-                height: ScreenUtil.getInstance().setHeight(30),
-              ),
-              Container(
-                height: 60,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: dashBoardColor),
-                      ),
-                      icon: Icon(
-                        Icons.person,
-                        color: dashBoardColor,
-                      ),
-                      hintText: "Full Name",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
-                  validator: (value) =>
-                      value.isEmpty ? 'Full Name can\'t be empty' : null,
-                  onSaved: (value) => _fullName = value.trim(),
-                ),
-              ),
-              Container(
-                height: 60,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: dashBoardColor),
-                      ),
-                      icon: Icon(
-                        Icons.email,
-                        color: dashBoardColor,
-                      ),
-                      hintText: "Email",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
-                  validator: (value) =>
-                      value.isEmpty ? 'Email can\'t be empty' : null,
-                  onSaved: (value) => _email = value.trim(),
-                ),
-              ),
-              Container(
-                height: 60,
-                child: TextFormField(
-                  obscureText: true,
-                  decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: dashBoardColor),
-                      ),
-                      icon: Icon(
-                        Icons.lock,
-                        color: dashBoardColor,
-                      ),
-                      hintText: "Password",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
-                  validator: (value) =>
-                      value.isEmpty ? 'Password can\'t be empty' : null,
-                  onSaved: (value) => _password = value,
-                ),
-              ),
-              Container(
-                height: 60,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: dashBoardColor),
-                      ),
-                      icon: Icon(
-                        Icons.phone_android,
-                        color: dashBoardColor,
-                      ),
-                      hintText: "Phone Number",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
-                  validator: (value) =>
-                      value.isEmpty ? 'Phone Number can\'t be empty' : null,
-                  onSaved: (value) => _contactNumber = value.trim(),
-                ),
-              ),
-              Container(
-                height: 60,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: dashBoardColor),
-                      ),
-                      icon: Icon(
-                        Icons.perm_identity,
-                        color: dashBoardColor,
-                      ),
-                      hintText: "Enter your National Id",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
-                  onSaved: (value) => _nationalId = value.trim(),
-                ),
-              ),
-              Container(
-                height: 60,
-                child: TextFormField(
-                  decoration: InputDecoration(
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: dashBoardColor),
-                      ),
-                      icon: Icon(
-                        Icons.add_location,
-                        color: dashBoardColor,
-                      ),
-                      hintText: "Your Address",
-                      hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
-                  onSaved: (value) => _residentialAddress = value.trim(),
-                ),
-              ),
-              Container(
-                height: 60,
-                child: DropdownButtonFormField<String>(
-                  items: <String>['supervisor', 'Manager', 'worker']
-                      .map<DropdownMenuItem<String>>((value) {
-                    return DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    );
-                  }).toList(),
-                  onChanged: employeeTypeChange,
-                  value: _employeeType,
-                  hint: Text("enter your job type"),
-                  validator: (value) =>
-                      value.isEmpty ? 'job type can\'t be empty' : null,
-                ),
-              ),
-              Container(
-                height: 60,
-                child: DropdownButtonFormField<String>(
-                  items: _roleValues.map<DropdownMenuItem<String>>((value) {
-                    return DropdownMenuItem<String>(
-                      child: Text(value),
-                      value: value,
-                    );
-                  }).toList(),
-                  onChanged: employeeRoleChange,
-                  value: _role,
-                  hint: Text("Enter Your Job Role"),
-                  validator: (value) =>
-                      value.isEmpty ? 'Job Role can\'t be empty' : null,
-                ),
-              ),
-              Text(
-                _errorMessage,
-                style: TextStyle(color: Colors.red),
-              ),
+              style: TextStyle(
+                  fontSize: ScreenUtil.getInstance().setSp(45),
+                  fontFamily: "Poppins-Bold",
+                  letterSpacing: .6)),
+          SizedBox(
+            height: ScreenUtil.getInstance().setHeight(30),
+          ),
+          Container(
+            height: 60,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: dashBoardColor),
+                  ),
+                  icon: Icon(
+                    Icons.person,
+                    color: dashBoardColor,
+                  ),
+                  hintText: "Full Name",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
+              validator: (value) =>
+              value.isEmpty ? 'Full Name can\'t be empty' : null,
+              onSaved: (value) => _fullName = value.trim(),
+            ),
+          ),
+          Container(
+            height: 60,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: dashBoardColor),
+                  ),
+                  icon: Icon(
+                    Icons.email,
+                    color: dashBoardColor,
+                  ),
+                  hintText: "Email",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
+              validator: (value) =>
+              value.isEmpty ? 'Email can\'t be empty' : null,
+              onSaved: (value) => _email = value.trim(),
+            ),
+          ),
+          Container(
+            height: 60,
+            child: TextFormField(
+              obscureText: true,
+              decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: dashBoardColor),
+                  ),
+                  icon: Icon(
+                    Icons.lock,
+                    color: dashBoardColor,
+                  ),
+                  hintText: "Password",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
+              validator: (value) =>
+              value.isEmpty ? 'Password can\'t be empty' : null,
+              onSaved: (value) => _password = value,
+            ),
+          ),
+          Container(
+            height: 60,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: dashBoardColor),
+                  ),
+                  icon: Icon(
+                    Icons.phone_android,
+                    color: dashBoardColor,
+                  ),
+                  hintText: "Phone Number",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
+              validator: (value) =>
+              value.isEmpty ? 'Phone Number can\'t be empty' : null,
+              onSaved: (value) => _contactNumber = value.trim(),
+            ),
+          ),
+          Container(
+            height: 60,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: dashBoardColor),
+                  ),
+                  icon: Icon(
+                    Icons.perm_identity,
+                    color: dashBoardColor,
+                  ),
+                  hintText: "Enter your National Id",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
+              onSaved: (value) => _nationalId = value.trim(),
+              validator:(value){
+               if(value.isEmpty ) return 'National Id can\'t be empty' ;
+                if(value.length != 14 ) return 'enter correct National Id' ;
+                return null ;
+              }
+              ,
+            ),
+
+          ),
+          Container(
+            height: 60,
+            child: TextFormField(
+              decoration: InputDecoration(
+                  focusedBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: dashBoardColor),
+                  ),
+                  icon: Icon(
+                    Icons.add_location,
+                    color: dashBoardColor,
+                  ),
+                  hintText: "Your Address",
+                  hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
+              onSaved: (value) => _residentialAddress = value.trim(),
+            ),
+          ),
+          Container(
+            height: 60,
+            child: DropdownButtonFormField<String>(
+              items: <String>['supervisor', 'Manager', 'worker']
+                  .map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem<String>(
+                  child: Text(value),
+                  value: value,
+                );
+              }).toList(),
+              onChanged: employeeTypeChange,
+              value: _employeeType,
+              hint: Text("enter your job type"),
+              validator: (value) =>
+              value.isEmpty ? 'job type can\'t be empty' : null,
+            ),
+          ),
+          Container(
+            height: 60,
+            child: DropdownButtonFormField<String>(
+              items: _roleValues.map<DropdownMenuItem<String>>((value) {
+                return DropdownMenuItem<String>(
+                  child: Text(value),
+                  value: value,
+                );
+              }).toList(),
+              onChanged: employeeRoleChange,
+              value: _role,
+              hint: Text("Enter Your Job Role"),
+              validator: (value) =>
+              _employeeType == "worker" ? (value.isEmpty
+                  ? 'Job Role can\'t be empty'
+                  : null) : null,
+            ),
+          ),
+
+            Text(
+              _errorMessage,
+              style: TextStyle(color: Colors.red),
+            ),
             ],
           ),
         ),
