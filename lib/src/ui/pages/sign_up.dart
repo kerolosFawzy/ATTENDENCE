@@ -342,8 +342,12 @@ class _SignUpState extends State<SignUp> {
                   ),
                   hintText: "Full Name",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
-              validator: (value) =>
-              value.isEmpty ? 'Full Name can\'t be empty' : null,
+              validator: (value) {
+                if(value.isEmpty ) return 'Full Name can\'t be empty' ;
+                if(value.length < 14 ) return 'enter Full Name ' ;
+                return null ;
+              },
+
               onSaved: (value) => _fullName = value.trim(),
             ),
           ),
@@ -397,8 +401,11 @@ class _SignUpState extends State<SignUp> {
                   ),
                   hintText: "Phone Number",
                   hintStyle: TextStyle(color: Colors.grey, fontSize: 15.0)),
-              validator: (value) =>
-              value.isEmpty ? 'Phone Number can\'t be empty' : null,
+              validator: (value) {
+                if(value.isEmpty ) return 'Phone Number can\'t be empty' ;
+                if(value.length != 11 ) return 'enter correct Phone Number' ;
+                return null ;
+              },
               onSaved: (value) => _contactNumber = value.trim(),
             ),
           ),

@@ -8,6 +8,7 @@ import 'package:geo_attendance_system/src/models/user.dart';
 import 'package:geo_attendance_system/src/services/database.dart';
 import 'package:geo_attendance_system/src/services/fetch_attendance.dart';
 import 'package:geo_attendance_system/src/ui/constants/colors.dart';
+import 'package:geo_attendance_system/src/ui/widgets/Info_dialog_box.dart';
 import 'package:geo_attendance_system/src/ui/widgets/loader_dialog.dart';
 
 import 'leave_application.dart';
@@ -154,11 +155,18 @@ class _EmployeeAttendance extends State<EmployeeAttendance> {
 
                             if (_todate != null && _todate != "Select") {
                               setState(() {
+
                                 int _difference =
                                     _toDateInt.difference(_fromDateInt).inDays;
                                 _difference += 1;
-                                if (_difference <= 0)
-                                  leavesCount = "Invalid Dates";
+                                if (_difference <= 0 || _toDateInt.isBefore(_fromDateInt))
+                                  showDialogTemplate(
+                                      context,
+                                      "Mistake",
+                                      "you Entered Invalid date",
+                                      "assets/gif/no_entry.gif",
+                                      Color.fromRGBO(51, 205, 187, 1.0),
+                                      "Try Again");
                                 else
                                   leavesCount = _difference.toString();
                               });
@@ -225,8 +233,14 @@ class _EmployeeAttendance extends State<EmployeeAttendance> {
                                 int _difference =
                                     _toDateInt.difference(_fromDateInt).inDays;
                                 _difference += 1;
-                                if (_difference <= 0)
-                                  leavesCount = "Invalid Dates";
+                                if (_difference <= 0 || _fromDateInt.isAfter(_toDateInt))
+                                  showDialogTemplate(
+                                      context,
+                                      "Mistake",
+                                      "you Entered Invalid date",
+                                      "assets/gif/no_entry.gif",
+                                      Color.fromRGBO(51, 205, 187, 1.0),
+                                      "Try Again");
                                 else
                                   leavesCount = _difference.toString();
                               });
