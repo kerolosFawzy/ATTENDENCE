@@ -368,6 +368,7 @@ class _SignUpState extends State<SignUp> {
               value.isEmpty ? 'Email can\'t be empty' : null,
               onSaved: (value) => _email = value.trim(),
             ),
+
           ),
           Container(
             height: 60,

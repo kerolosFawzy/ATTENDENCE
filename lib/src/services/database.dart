@@ -28,6 +28,15 @@ class DataBase {
     }
   }
 
+  void editUserData(String Uid , Employee user) async {
+    await usersRef.child(Uid).update({
+      'contactNumber' : user.contactNumber ,
+      'employeeID' : user.employeeID,
+      'fullName' : user.fullName ,
+      'officeEmail' : user.officeEmail ,
+      'residentialAddress' : user.residentialAddress ,
+    });
+  }
 
   Future<Employee> getUserData(String Uid) async {
     try {

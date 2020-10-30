@@ -10,6 +10,7 @@ import 'package:geo_attendance_system/src/services/fetch_attendance.dart';
 import 'package:geo_attendance_system/src/ui/constants/colors.dart';
 import 'package:geo_attendance_system/src/ui/widgets/Info_dialog_box.dart';
 import 'package:geo_attendance_system/src/ui/widgets/loader_dialog.dart';
+import 'package:sortedmap/sortedmap.dart';
 
 import 'leave_application.dart';
 
@@ -315,6 +316,9 @@ class _EmployeeAttendance extends State<EmployeeAttendance> {
                                 itemBuilder: (context, index) {
                                   String key2 = secondMap.keys.elementAt(index);
                                   Map lastMap = secondMap[key2];
+                                  lastMap = new  SortedMap(Ordering.byValue()) ;
+//                                  List<Map> myList =lastMap ;
+//                                  lastMap = lastMap.toList();
                                   return Column(textDirection: TextDirection.ltr,
                                     children: [
                                     Container(

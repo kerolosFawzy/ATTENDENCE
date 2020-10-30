@@ -6,6 +6,7 @@ import 'package:geo_attendance_system/src/models/user.dart';
 import 'package:geo_attendance_system/src/services/database.dart';
 import 'package:geo_attendance_system/src/services/fetch_user.dart';
 import 'package:geo_attendance_system/src/ui/constants/colors.dart';
+import 'package:geo_attendance_system/src/ui/pages/edit_profile.dart';
 
 enum AppBarBehavior { normal, pinned, floating, snapping }
 
@@ -116,15 +117,15 @@ class ProfilePageState extends State<ProfilePage> {
   Employee employee;
 
   @override
-  void initState()  {
+  void initState() {
     super.initState();
     getEmp();
   }
 
-  void getEmp() async{
+  void getEmp() async {
     var temp = await DataBase().getUserData(widget.user.uid);
     setState(() {
-      this.employee = temp ;
+      this.employee = temp;
     });
   }
 
@@ -136,7 +137,7 @@ class ProfilePageState extends State<ProfilePage> {
         brightness: Brightness.light,
         platform: Theme.of(context).platform,
       ),
-      child: Scaffold(
+      child: new Scaffold(
         key: _scaffoldKey,
         body: employee == null
             ? Container(
@@ -165,17 +166,22 @@ class ProfilePageState extends State<ProfilePage> {
                                 SizedBox(
                                   width: 10,
                                 ),
-                                Text("Change Password".toUpperCase())
+                                Text("Edit Profile".toUpperCase())
                               ],
                             ),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => EditProfile()));
+                            },
                           )),
                     ],
                     flexibleSpace: FlexibleSpaceBar(
                       title: Container(
                         decoration: BoxDecoration(
                             color: Colors.deepOrangeAccent.withOpacity(0.5),
-                            boxShadow: [BoxShadow(color: Colors.white30, blurRadius: 10)]),
+                            boxShadow: [
+                              BoxShadow(color: Colors.white30, blurRadius: 10)
+                            ]),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 8.0, horizontal: 10),
@@ -184,7 +190,7 @@ class ProfilePageState extends State<ProfilePage> {
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w900,
-                            fontSize: 16),
+                                fontSize: 16),
                           ),
                         ),
                       ),
@@ -259,20 +265,21 @@ class ProfilePageState extends State<ProfilePage> {
                           ),
                         ],
                       ),
-                      employee.designation == null?Container():
-                      ProfilePageWidget(
-                        icon: Icons.description,
-                        children: <Widget>[
-                          _ContactItem(
-                            icon: Icons.work,
-                            onPressed: null,
-                            lines: <String>[
-                              employee.designation,
-                              'Designation',
-                            ],
-                          ),
-                        ],
-                      ),
+                      employee.designation == null
+                          ? Container()
+                          : ProfilePageWidget(
+                              icon: Icons.description,
+                              children: <Widget>[
+                                _ContactItem(
+                                  icon: Icons.work,
+                                  onPressed: null,
+                                  lines: <String>[
+                                    employee.designation,
+                                    'Designation',
+                                  ],
+                                ),
+                              ],
+                            ),
                     ]),
                   ),
                 ],
