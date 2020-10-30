@@ -7,6 +7,7 @@ import 'package:geo_attendance_system/src/models/user.dart';
 import 'package:geo_attendance_system/src/services/fetch_IMEI.dart';
 import 'package:geo_attendance_system/src/ui/constants/colors.dart';
 import 'package:geo_attendance_system/src/ui/pages/homepage.dart';
+import 'package:geo_attendance_system/src/ui/pages/reset_password.dart';
 import 'package:geo_attendance_system/src/ui/pages/sign_up.dart';
 import 'package:geo_attendance_system/src/ui/widgets/Info_dialog_box.dart';
 import 'package:geo_attendance_system/src/ui/widgets/loader_dialog.dart';
@@ -347,22 +348,7 @@ class _LoginState extends State<Login> {
                     SizedBox(
                       height: ScreenUtil.getInstance().setHeight(20),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          "Don't have Login Details? ",
-                          style: TextStyle(fontFamily: "Poppins-Medium"),
-                        ),
-                        InkWell(
-                          onTap: () {},
-                          child: Text("Contact Admin",
-                              style: TextStyle(
-                                  color: splashScreenColorTop,
-                                  fontFamily: "Poppins-Bold")),
-                        )
-                      ],
-                    )
+
                   ],
                 ),
               ),
@@ -462,12 +448,18 @@ class _LoginState extends State<Login> {
                           fontSize: ScreenUtil.getInstance().setSp(28)),
                     ),
                   ),
-                  Text(
-                    "Forgot Password?",
-                    style: TextStyle(
-                        color: dashBoardColor,
-                        fontFamily: "Poppins-Medium",
-                        fontSize: ScreenUtil.getInstance().setSp(28)),
+                  FlatButton(
+                    onPressed: (){
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => ResetPassword()));
+                    },
+                    child: Text(
+                      "Forgot Password?",
+                      style: TextStyle(
+                          color: dashBoardColor,
+                          fontFamily: "Poppins-Medium",
+                          fontSize: ScreenUtil.getInstance().setSp(28)),
+                    ),
                   )
                 ],
               )
