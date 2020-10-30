@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geo_attendance_system/src/models/user.dart';
+import 'package:geo_attendance_system/src/ui/pages/add_location.dart';
 import 'package:geo_attendance_system/src/ui/pages/employ_attendence.dart';
 
 import '../pages/attendance_recorder.dart';
@@ -56,6 +57,13 @@ void employeesAttendanceCallback(BuildContext context, FirebaseUser user) {
                 user: user,
               )));
 }
+void addLocation(BuildContext context, FirebaseUser user) {
+  Navigator.push(
+      context,
+      CupertinoPageRoute(
+          builder: (context) => AddLocation(
+              )));
+}
 
 List<List> infoAboutTiles = [
   [
@@ -75,6 +83,12 @@ List<List> infoAboutTiles = [
     "Employees Attendance",
     "Check All Employees Attendance",
     employeesAttendanceCallback
+  ],
+  [
+    "assets/icons/icons8-location-64.png",
+    "Add New Location",
+    "Add Location",
+    addLocation
   ],
 //  [
 //    "assets/icons/leave_application.png",

@@ -1,4 +1,5 @@
 import 'package:firebase_database/firebase_database.dart';
+import 'package:geo_attendance_system/src/models/location.dart';
 import 'package:geo_attendance_system/src/models/user.dart';
 
 class DataBase {
@@ -10,6 +11,16 @@ class DataBase {
   Future addUser(Employee user, String uid) async {
     try {
       return await usersRef.child(uid).set(user.toJson());
+    } catch (e) {
+      return e;
+    }
+  }
+
+  Future addLocation(name ,latitude ,longitude ) async {
+
+    Location location = new Location(name: name , longitude: double.parse(longitude) , latitude:  double.parse(latitude) , radius: 200.6) ;
+    try {
+      return await databaseRef.child("location").child(name).set(location.toJson());
     } catch (e) {
       return e;
     }
