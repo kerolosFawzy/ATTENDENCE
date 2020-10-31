@@ -316,9 +316,11 @@ class _EmployeeAttendance extends State<EmployeeAttendance> {
                                 itemBuilder: (context, index) {
                                   String key2 = secondMap.keys.elementAt(index);
                                   Map lastMap = secondMap[key2];
-                                  lastMap = new  SortedMap(Ordering.byValue()) ;
+
+                               //  lastMap = new SortedMap(Ordering.byKey()) ;
 //                                  List<Map> myList =lastMap ;
 //                                  lastMap = lastMap.toList();
+
                                   return Column(textDirection: TextDirection.ltr,
                                     children: [
                                     Container(
@@ -351,24 +353,29 @@ class _EmployeeAttendance extends State<EmployeeAttendance> {
                                         String state , time , place ;
                                         state = key3.split("-").first;
                                         time = key3.split("-").last;
+
                                         place = lastMap.values.elementAt(index)["office"];
                                         return(
                                            Padding(
                                              padding: const EdgeInsets.only(left: 16.0 , top: 10.0),
-                                             child: Text(
-                                               "Signed $state At $time in $place",
-                                               style: TextStyle(
-                                                 fontSize: 16,
-                                                 fontWeight: FontWeight.bold,
+                                             child: Center(
+                                               child: Text(
+                                                 "Signed $state At $time in $place",
+                                                 style: TextStyle(
+                                                   fontSize: 16,
+                                                   fontWeight: FontWeight.bold,
+                                                 ),
                                                ),
                                              ),
                                            )
                                         );
                                       },
-                                    )
+                                    ),
                                   ],);
                                 },
                               ),
+                              Divider(color: Colors.black),
+
                             ],
                           ));
                         },
